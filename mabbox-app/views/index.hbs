@@ -1,0 +1,52 @@
+<h1>{{title}}</h1>
+<p>Welcome to {{title}}</p>
+
+<div id='map' style='width: 85vw; height: 60vh; margin:50px auto;'></div>
+
+
+<script>
+  mapboxgl.accessToken = 'pk.eyJ1IjoiYWxpY2FudG9ydW4iLCJhIjoiY2p4cHU0M3NwMDJ1aDNjcjNsNjNsazM0ciJ9.sriMIOay4kEmZcUcJHP-Pw';
+  var map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/streets-v9'
+  });
+
+
+
+
+  axios.get('http://localhost:3000/api/places').then((response) => {
+    let places = response.data
+
+    places.forEach(place => {
+      let popup = new mapboxgl.Popup({ offset: 0, className: 'my-class' })
+        .setHTML(`<div class="popup"><p>${place.description}</p><img src="${place.imageUrl}" alt=""></div>`)
+        .setMaxWidth("none")
+
+      let marker = new mapboxgl.Marker()
+        .setLngLat(place.location.coordinates)
+        .setPopup(popup)
+        .addTo(map)
+    })
+  })
+</script>
+
+
+
+<form action="/" method="post">
+
+  <label for="name">Name: </label>
+  <input id="name" name="name" type="text">
+
+  <label for="description">Event Description: </label>
+  <input id="description" name="description" type="text">
+
+  <label for="imageUrl">ImageUrl: </label>
+  <input type="url" name="imageUrl" id="imageUrl">
+
+  <label for="longtitude">Latitude: </label>
+  <input type="number" step="any" name="longtitude" id="longtitude">
+  <label for="latitude">Longtitude: </label>
+  <input type="number" step="any" name="latitude" id="latitude">
+
+
+  <button type="submit">Submit</button></form>
